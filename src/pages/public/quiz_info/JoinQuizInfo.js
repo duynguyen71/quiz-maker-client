@@ -11,10 +11,10 @@ import QuizService from "../../../service/QuizService";
 
 const JoinQuizInfo = () => {
     const [isLoading, setLoading] = useState(true);
+    const {user} = useAuth();
     const history = useHistory();
     const {code} = useParams();
     const {foundedQuiz, setFoundedQuiz, setDirectUrl} = useQuiz();
-    const {user} = useAuth();
 
 
     useEffect(async () => {
@@ -33,6 +33,11 @@ const JoinQuizInfo = () => {
 
     //handle button start
     const onStart = async () => {
+        if (user == null || !localStorage.getItem('accessToken')) {
+            setDirectUrl(`/join/quiz/${code}`);
+            history.push("/login")
+            return;
+        }
         try {
             const data = await QuizService.getQuizQuestions(code);
             setFoundedQuiz(prev => ({

@@ -83,6 +83,9 @@ const LibraryPage = () => {
                     <RLink to={'/admin/quiz/removed'}>
                         <Text textDecoration={'underline'}>Removed Quizzes</Text>
                     </RLink>
+                    <RLink to={'/admin/quiz/assigment/quizzes'}>
+                        <Text textDecoration={'underline'}>Assignment Quizzes</Text>
+                    </RLink>
                 </HStack>
                 {/**/}
                 <HStack w={'100%'} py={5}>

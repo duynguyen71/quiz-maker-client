@@ -24,12 +24,10 @@ import Footer from "../../../components/public/Footer";
 import {GoFlame} from "react-icons/all";
 import {useAuth} from "../../../hooks/useAuth";
 import {useHistory} from "react-router-dom";
-import axios from "axios";
-import {useQuiz} from "../../../providers/QuizProvider";
 import NotFoundQuiz from "./NotFoundQuiz";
 import Nav from "./Nav";
-import quizApi from "../../../api/quizApi";
 import QuizService from "../../../service/QuizService";
+import {useQuiz} from "../../../providers/QuizProvider";
 
 const HomePage = () => {
     const history = useHistory();
@@ -37,8 +35,8 @@ const HomePage = () => {
     const [code, setCode] = useState("8AzAO8");
     const [found, setFound] = useState(true);
     const [isLoading, setLoading] = useState(true);
-
     const [quizzes, setQuizzes] = useState(null);
+    const {foundedQuiz, setFoundedQuiz, setDirectUrl} = useQuiz();
     useEffect(() => {
         /*
         get newest quizzes
@@ -63,17 +61,19 @@ const HomePage = () => {
     /*
     handle find quiz by code 
     */
-    const handleJoinQuiz = async (e) => {
-        // if (code != null && code.length > 0) {
-        //     try {
-        //         const data = await QuizService.getQuizByCode(code);
-        //         console.log(data);
-        //         setFound(true);
-        //     } catch (e) {
-        //         setFound(false);
-        //         console.log(e.response.message);
-        //     }
-        // }
+    const handleFindQuiz = async (e) => {
+        if (code != null && code.length > 0) {
+            try {
+                const resp = await QuizService.getQuizByCode(code);
+                console.log(resp);
+                setFoundedQuiz(resp.data);
+                history.push(`/join/quiz/${code}`);
+                setFound(true);
+            } catch (e) {
+                setFound(false);
+                console.log(e.response.message);
+            }
+        }
     };
 
     const getUserStreaks = () => {
@@ -124,7 +124,7 @@ const HomePage = () => {
                             />
                             <Button
                                 isDisabled={code.length === 0}
-                                onClick={handleJoinQuiz}
+                                onClick={handleFindQuiz}
                                 minH={"50px"}
                                 minW={"30px"}
                                 variant={"solid"}
@@ -159,7 +159,7 @@ const HomePage = () => {
                                     <Avatar
                                         name={user != null ? user.username : ""}
                                         src={
-                                  (user && user.avt) ||
+                                            (user && user.avt) ||
                                             "https://cdn-icons-png.flaticon.com/512/2021/2021646.png"
                                         }
                                     />

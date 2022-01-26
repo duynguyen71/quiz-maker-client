@@ -7,7 +7,7 @@ import Stomp from "stompjs";
 import LoginPage from "./pages/public/login/LoginPage";
 import Axios from "axios";
 import {PrivateRoute} from "./routes/privateRoute";
-import Public from "./components/public/Public";
+import Public from "./pages/public/Public";
 import Admin from "./pages/admin/Admin";
 import AdminSettingProvider from "./providers/AdminSettingProvider";
 import VerificationPage from "./pages/public/register/VerificationPage";

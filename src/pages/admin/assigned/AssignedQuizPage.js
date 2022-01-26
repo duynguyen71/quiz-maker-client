@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     Badge,
     Box, Button,
@@ -16,42 +16,50 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import dateFormat from 'dateformat';
+import UserService from "../../../service/UserService";
+import {AdminContext} from "../../../providers/AdminSettingProvider";
+import {useHistory} from "react-router-dom";
 
 const AssignedQuizPage = () => {
 
-    const [isLoading, setLoading] = useState(true);
+    const {setLoading} = useContext(AdminContext);
     const [assignedQuizzes, setAssignedQuiz] = useState([]);
+    const history = useHistory();
     useEffect(() => {
-        console.log('use effect assign quiz');
+        getAssignedQuizzes();
+    }, []);
+
+    const getAssignedQuizzes = async () => {
         try {
             setLoading(true);
-            axios.get('http://localhost:8080/api/v1/member/quizzes/assigned-quizzes', {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
-                }
-            })
-                .then((resp) => {
-                    if (resp.status === 200) {
-                        console.log(resp.data);
-                        setAssignedQuiz(resp.data);
-                        setLoading(false);
-                    }
-                })
-
+            const resp = await UserService.getAssignedQuizzes();
+            setAssignedQuiz(resp.data);
+            console.log(resp.data);
         } catch (e) {
 
+        } finally {
+            setLoading(false);
         }
-    }, []);
+    }
     const formatDate = (start, end) => {
         const from = dateFormat(start, "dddd, mmmm, yyyy");
         const to = dateFormat(end, "dddd, mmmm, yyyy, h:MM:ss TT");
         return from + "\t-\t" + to;
 
     }
+
+    const isOutDate = (d) => {
+        const now = new Date();
+        const date = new Date(d);
+        if (date < now) {
+            return true;
+        }
+        return false;
+    }
     return (
         <>
 
-            <Heading textAlign={'center'}>Assigned quizess</Heading>
+            <Heading fontSize={'20px'} textAlign={'center'}>Assigned quizzes</Heading>
             <Divider my={5}/>
 
             <Table size={'lg'} variant={'striped'} colorScheme={'blue'}>
@@ -60,6 +68,7 @@ const AssignedQuizPage = () => {
                         <Th>No</Th>
                         <Th>Quiz Name</Th>
                         <Th>Deadline</Th>
+                        <Th>Status</Th>
                         <Th>Action</Th>
                     </Tr>
                 </Thead>
@@ -67,7 +76,7 @@ const AssignedQuizPage = () => {
                 <Tbody>
 
                     {
-                        assignedQuizzes.length == 0 && <Tr>
+                        (!assignedQuizzes || assignedQuizzes.length == 0) && <Tr w={'100%'}>
                             <Td colSpan={4} py={5} my={5}>
                                 Your dont have any assigned quiz
                             </Td>
@@ -75,13 +84,13 @@ const AssignedQuizPage = () => {
 
                     }
                     {
-                        assignedQuizzes.length > 0 &&
+                        assignedQuizzes &&
                         assignedQuizzes.map((assignmentInfo, index) => (
                             <Tr key={index}>
-                                <Td>1</Td>
+                                <Td>{index + 1}</Td>
                                 <Td>
                                     <HStack>
-                                        <Text>        {assignmentInfo.quizDetails.title}  </Text>
+                                        <Text>        {assignmentInfo.title}  </Text>
                                         <Badge ml="1" colorScheme="green">
                                             New
                                         </Badge>
@@ -105,8 +114,19 @@ const AssignedQuizPage = () => {
                                 </Td>
 
                                 <Td>
-                                    <Button colorScheme={'blue'}>
-                                        Take
+                                    <Text fontWeight={'medium'}>   {
+                                        assignmentInfo.status === 0 && 'Not Complete'}
+                                        {assignmentInfo.status === 1 && 'Completed'
+                                        }
+                                    </Text>
+                                </Td>
+                                <Td>
+                                    <Button
+                                        onClick={() => {
+                                            history.push(`/admin/assigned/${assignmentInfo.quiz.id}/info`)
+                                        }}
+                                        colorScheme={'blue'}>
+                                        {!isOutDate(assignmentInfo.finishDate) ? "View" : "Out date"}
                                     </Button>
                                 </Td>
 

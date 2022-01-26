@@ -16,18 +16,20 @@ import DatePicker from "react-datepicker";
 import {useParams} from "react-router-dom";
 import {QuizEditContext} from "../../../providers/QuizEditProvider";
 import {AdminContext} from "../../../providers/AdminSettingProvider";
+import UserService from "../../../service/UserService";
 
 const Assignment = () => {
 
     const {getQuizDetail, quiz} = useContext(QuizEditContext);
-    const {isLoading} = useContext(AdminContext);
+    const {isLoading, setLoading} = useContext(AdminContext);
     const {id} = useParams();
-    const [emails, setEmails] = useState([]);
     const [email, setEmail] = useState("");
-    const [finishDate, setFinishDate] = useState(new Date());
+    const [err, setErr] = useState('');
     const [assignment, setAssignment] = useState({
         quizId: id,
-        emails: []
+        emails: [],
+        startDate: new Date(),
+
     })
     const toast = useToast();
     const ExampleCustomInput = forwardRef(({value, onClick}, ref) => (
@@ -39,6 +41,24 @@ const Assignment = () => {
         console.log(id);
         getQuizDetail(id);
     }, [])
+    const assignToUsers = async () => {
+        if (assignment.startDate != null && assignment.finishDate != null && assignment.title != null) {
+            setLoading(true);
+            console.log('assigning....')
+            try {
+                const data = await UserService.assignToUsers(assignment);
+                console.log("assign success")
+            } catch (e) {
+                console.log("Could not assign quiz to users! ", e)
+            } finally {
+                setLoading(false);
+            }
+        }else{
+            toast("Please select finish date!")
+        }
+        console.log(assignment)
+    }
+
     return (
         <Box w={'100%'} minH={'100vh'}>
             {
@@ -55,38 +75,61 @@ const Assignment = () => {
                                 <HStack w={'100%'}>
                                     <FormControl id="title" isRequired>
                                         <FormLabel>Title</FormLabel>
-                                        <Input bg={'white'} placeholder="Title"/>
+                                        <Input
+                                            onChange={(e) =>
+                                                setAssignment(prev => (
+                                                    {
+                                                        ...prev,
+                                                        title: e.target.value
+                                                    }
+                                                ))}
+                                            value={assignment.title || ''}
+                                            bg={'white'} placeholder="Title"/>
                                     </FormControl>
                                 </HStack>
                                 {/*    DESCRIPTION*/}
                                 <FormControl id="Description" isRequired>
                                     <FormLabel>Description</FormLabel>
-                                    <Textarea bg={'white'} placeholder="Description"/>
+                                    <Textarea
+                                        onChange={(e) =>
+                                            setAssignment(prev => (
+                                                {
+                                                    ...prev,
+                                                    description: e.target.value
+                                                }
+                                            ))}
+                                        value={assignment.description || ''}
+                                        bg={'white'} placeholder="Description"/>
                                 </FormControl>
                             </VStack>
                             <Box flex={3} bg={'white'} p={2} mx={2} minH={'100vh'}>
                                 <VStack align={'start'} w={'100%'} spacing={5}>
-                                    <Button alignSelf={'end'} colorScheme={'blue'}>Giao Bài</Button>
+
                                     <VStack w={'100%'} align={'start'}>
                                         <Text>Deadline</Text>
+
                                         <DatePicker
                                             customInput={<ExampleCustomInput/>}
-                                            selected={finishDate}
-                                            onChange={(date) => setFinishDate(date)}
-                                            timeInputLabel="Time:"
-                                            dateFormat="MM/dd/yyyy h:mm aa"
-                                            showTimeInput
+                                            selected={assignment.startDate}
+                                            onChange={(date) => setAssignment((prev) => ({
+                                                ...prev,
+                                                startDate: (date)
+                                            }))}
+                                            showTimeSelect
+                                            timeFormat="HH:mm"
+                                            dateFormat="HH:mm dd-MM-yyyy"
                                         />
                                         <DatePicker
                                             customInput={<ExampleCustomInput/>}
                                             selected={assignment.finishDate}
+
                                             onChange={(date) => setAssignment((prev) => ({
                                                 ...prev,
-                                                finishDate: date
+                                                finishDate: (date)
                                             }))}
-                                            timeInputLabel="Time:"
-                                            dateFormat="MM/dd/yyyy h:mm aa"
-                                            showTimeInput
+                                            showTimeSelect
+                                            timeFormat="HH:mm"
+                                            dateFormat="HH:mm dd-MM-yyyy"
                                         />
                                     </VStack>
                                     <VStack>
@@ -142,6 +185,10 @@ const Assignment = () => {
                                             </Button>
                                         </HStack>
                                     </VStack>
+                                    <Button
+                                        size={'sm'}
+                                        onClick={assignToUsers}
+                                        alignSelf={'end'} colorScheme={'blue'}>Giao Bài</Button>
                                 </VStack>
                             </Box>
                         </Flex>

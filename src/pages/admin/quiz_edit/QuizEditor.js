@@ -275,12 +275,13 @@ const QuizEditor = () => {
                                     ...prevState,
                                     status: e.target.value
                                 }))}
+                                value={quiz && quiz.status || 0}
                                 size={'sm'} maxW={40}
                                 bg={'blue.200'}>
-                                <option selected={quiz && quiz.status === 0 && 'selected'} value="0">Draft</option>
-                                <option selected={quiz && quiz.status === 1 && 'selected'} value="1">Private
+                                <option value="0">Draft</option>
+                                <option value="1">Private
                                 </option>
-                                <option selected={quiz && quiz.status === 2 && 'selected'} value="2">Public</option>
+                                <option value="2">Public</option>
                             </Select>
                         </HStack>
                         {/*    */}

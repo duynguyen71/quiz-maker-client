@@ -59,32 +59,30 @@ export default function SidebarWithHeader({children}) {
     return (
         <>
 
-            {
-                !fullMode && <Box minH="100vh" bg={'gray.100'}>
-                    <SidebarContent
-                        onClose={() => onClose}
-                        display={{base: "none", md: "block"}}
-                    />
-                    <Drawer
-                        autoFocus={false}
-                        isOpen={isOpen}
-                        placement="left"
-                        onClose={onClose}
-                        returnFocusOnClose={false}
-                        onOverlayClick={onClose}
-                        size="full"
-                    >
-                        <DrawerContent>
-                            <SidebarContent onClose={onClose}/>
-                        </DrawerContent>
-                    </Drawer>
-                    {/* mobilenav */}
-                    <MobileNav onOpen={onOpen} avt={user.avt}/>
-                    <Box ml={{base: 0, md: 60}} p="4">
-                        {children}
-                    </Box>
+            <Box w={'100%'} minH="100vh" bg={'gray.100'}>
+                {fullMode && <SidebarContent
+                    onClose={() => onClose}
+                    display={{base: "none", md: "block"}}
+                />}
+                <Drawer
+                    autoFocus={false}
+                    isOpen={isOpen}
+                    placement="left"
+                    onClose={onClose}
+                    returnFocusOnClose={false}
+                    onOverlayClick={onClose}
+                    size="full"
+                >
+                    <DrawerContent>
+                        <SidebarContent onClose={onClose}/>
+                    </DrawerContent>
+                </Drawer>
+                {/* mobilenav */}
+                <MobileNav fullMode={fullMode} onOpen={onOpen} avt={user.avt}/>
+                <Box ml={{base: 0, md: fullMode && 60}} p="4">
+                    {children}
                 </Box>
-            }
+            </Box>
         </>
     );
 }
@@ -172,12 +170,12 @@ const NavItem = ({icon, children, link, ...rest}) => {
 };
 
 
-const MobileNav = ({onOpen, avt, ...rest}) => {
+const MobileNav = ({onOpen, avt, fullMode, ...rest}) => {
     const history = useHistory();
     const {logout, user} = useAuth();
     return (
         <Flex
-            ml={{base: 0, md: 60}}
+            // ml={{base: 0, md: !fullMode && 60}}
             px={{base: 4, md: 4}}
             height="20"
             alignItems="center"

@@ -6,9 +6,11 @@ const QuizService = {
         return await axiosClient.get(url);
     },
 
-    getQuizByCode: async (code) => {
+    getQuizByCode: async (code, params) => {
         const url = `/public/quizzes/${code}`;
-        return await axiosClient.get(url);
+        return await axiosClient.get(url, {
+            params: params
+        });
     },
     getQuizQuestions: async (code) => {
         const url = `/public/quizzes/${code}/questions`

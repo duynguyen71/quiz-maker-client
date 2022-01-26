@@ -46,6 +46,7 @@ const StartQuiz = () => {
             try {
                 if (!foundedQuiz) {
                     const quizInfo = await getQuizInfo();
+                    //check private quiz
                     setFoundedQuiz(quizInfo);
                     setSubmitContent((prev) => ({
                         ...prev, quizId: quizInfo.id,
@@ -66,7 +67,7 @@ const StartQuiz = () => {
                 }
 
             } catch (e) {
-
+                history.push('/')
             } finally {
                 setLoading(false);
             }
@@ -172,11 +173,12 @@ const StartQuiz = () => {
             {report && <Box bg={''} mx={'5'} mt={'5'} p={5}>
                 <Heading>Submit Report</Heading>
                 <SimpleGrid spacing={5} columns={'4'} py={5}>
-                    <SubmitReportEntry title={'score'} content={`${report.score}/${report.totalScore}`}/>
+                    <SubmitReportEntry title={'score'} content={`${report.score}/${report.quizScore}`}/>
                     <SubmitReportEntry title={'questions'}
                                        content={`${report.submitQuestionsCount}/${report.numOfQuestions}`}/>
                     <SubmitReportEntry title={'startTime'} content={`${format(report.startTime, "dd-mm hh:MM")}`}/>
                     <SubmitReportEntry title={'finishTime'} content={`${format(report.finishTime, "dd-mm hh:MM")}`}/>
+                    <SubmitReportEntry title={'attempt'} content={`${report.attempt}`}/>
                 </SimpleGrid>
             </Box>}
 

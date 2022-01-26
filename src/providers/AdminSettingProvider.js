@@ -4,8 +4,8 @@ import {Box, CircularProgress, Spinner} from "@chakra-ui/react";
 export const AdminContext = createContext();
 
 const AdminSettingProvider = ({children}) => {
-    const [fullMode, setFullMode] = useState(false);
-    const [isLoading, setLoading] = useState(true);
+    const [fullMode, setFullMode] = useState(true);
+    const [isLoading, setLoading] = useState(false);
 
 
     const value = {

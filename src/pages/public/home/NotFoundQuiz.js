@@ -19,7 +19,7 @@ const NotFoundQuiz = ({setShow}) => {
                 zIndex={1000}>
                 <VStack p={5} align={'start'}>
                     <Heading fontWeight={'medium'} color={'gray.600'} size={'20px'}>
-                        Cound not find quiz with ID : quizID
+                        Could not find quiz with ID : quizID
                     </Heading>
                     <Text color={'gray.500'}>Please try another code</Text>
                     <Button
