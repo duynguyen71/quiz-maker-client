@@ -37,7 +37,7 @@ const StartQuiz = () => {
     const {isLoading, setLoading} = useContext(AdminContext);
     const {code} = useParams();
     const [isOpen, setOpen] = useState(false);
-    const [report, setReport] = useState(null);
+    const [report, setReport] = useState({answers: []});
     const cancelRef = useRef();
     const {user} = useAuth();
     const [submitContent, setSubmitContent] = useState({answers: []});
@@ -150,7 +150,7 @@ const StartQuiz = () => {
 
     }
     const getQuestionAndOption = (questionId, optionId) => {
-        if (!isLoading&&report) {
+        if (!isLoading && report) {
 
             for (let i = 0; i < report.answers.length; i++) {
                 let questionAnswer = report.answers[i];
@@ -269,8 +269,13 @@ const StartQuiz = () => {
                                                                 <Checkbox
                                                                     // isChecked={report && getQuestionAndOption(question.questionId, option.optionId)}
                                                                     isDisabled={report !== null}
+                                                                    // defaultChecked={
+                                                                    //     // ((!isLoading && report && getQuestionAndOption(question.questionId, option.optionId))
+                                                                    //     (filterElement && filterElement.options.filter(o => o === option.optionId)[0])
+                                                                    //     // )
+                                                                    // }
                                                                     defaultChecked={
-                                                                        ((report && getQuestionAndOption(question.questionId, option.optionId))
+                                                                        ((!isLoading && report && getQuestionAndOption(question.questionId, option.optionId))
                                                                             || (filterElement && filterElement.options.filter(o => o === option.optionId)[0])
                                                                         )
                                                                     }

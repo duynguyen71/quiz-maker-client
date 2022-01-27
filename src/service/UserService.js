@@ -118,6 +118,22 @@ const UserService = {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
         })
+    },
+    getAssignedUsers: async (assignedInfoId) => {
+        const url = `/member/users/me/assignment/quizzes/${assignedInfoId}/users`;
+        return axiosClient.get(url, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+            }
+        })
+    },
+    getExamSubmittedAnswers: async (quizId,userId) => {
+        const url = `/member/users/${userId}/exam/submission-answers/${quizId}`;
+        return axiosClient.get(url, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+            }
+        })
     }
 }
 export default UserService;

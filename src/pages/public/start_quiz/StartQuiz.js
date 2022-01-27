@@ -52,11 +52,16 @@ const StartQuiz = () => {
                         ...prev, quizId: quizInfo.id,
                         startTime: new Date()
                     }))
+                    countDownTime(quizInfo.limitTime);
+                    console.log(quizInfo)
+
                 } else {
                     setSubmitContent((prev) => ({
                         ...prev, quizId: foundedQuiz.id, startTime: new Date()
 
                     }))
+                    countDownTime(foundedQuiz.limitTime);
+
                 }
                 if ((foundedQuiz && !foundedQuiz.questions) || (!foundedQuiz)) {
                     const questions = await getQuizQuestions();
@@ -157,6 +162,29 @@ const StartQuiz = () => {
         const data = await QuizService.submissionAnswers(JSON.stringify(submitContent));
         setReport(data.data);
         console.log(data);
+    }
+    const [timer, setTimer] = useState('');
+    const countDownTime = async (duration) => {
+        duration = duration * 60;
+        let timer = duration, minutes, seconds;
+        let i = setInterval(function () {
+            minutes = parseInt(timer / 60);
+            seconds = parseInt(timer % 60);
+
+            minutes = minutes <= 0 ? "0" + minutes : minutes;
+            seconds = seconds <= 0 ? "0" + seconds : seconds;
+            setTimer(minutes + ":" + seconds);
+
+            setSubmitContent(prev => ({
+                ...prev,
+                finishTime: new Date()
+            }))
+            if (--timer <= 0) {
+                setOpen(true);
+                clearInterval(i);
+            }
+        }, 1000);
+
     }
 
     return (
@@ -321,7 +349,7 @@ const StartQuiz = () => {
                             <Button
                                 isDisabled={report !== null}
                                 size={'md'} colorScheme={'teal'} variant={'outline'}
-                                leftIcon={<TimeIcon/>}>{foundedQuiz.limitTime || 'No Time Limit'}{' '}
+                                leftIcon={<TimeIcon/>}>{timer || 'No Time Limit'}{' '}
                                 left</Button>
                         </Flex>}
                     </Box>

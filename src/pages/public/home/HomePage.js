@@ -138,7 +138,7 @@ const HomePage = () => {
                         </Stack>
                     </Box>
                     {/*Day Streak*/}
-                    {!found && <NotFoundQuiz setShow={setFound}/>}
+                    {!found && <NotFoundQuiz code={code} setShow={setFound}/>}
                     <Box
                         boxShadow={"md"}
                         borderRadius={"10px"}

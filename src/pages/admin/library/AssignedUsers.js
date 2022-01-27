@@ -66,9 +66,6 @@ const AssignedUsers = ({isOpen, quizId, setOpen}) => {
                 <ModalOverlay/>
                 <ModalContent>
                     <ModalHeader
-                        //     style={{
-                        //     fontSize:10,
-                        // }}
                     >
                         <VStack w={'100%'} align={'start'}>
                             <HStack>

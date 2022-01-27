@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Button, Heading, Text, VStack} from "@chakra-ui/react";
 
-const NotFoundQuiz = ({setShow}) => {
+const NotFoundQuiz = ({setShow,code}) => {
     return (
         <>
             <Box
@@ -19,7 +19,7 @@ const NotFoundQuiz = ({setShow}) => {
                 zIndex={1000}>
                 <VStack p={5} align={'start'}>
                     <Heading fontWeight={'medium'} color={'gray.600'} size={'20px'}>
-                        Could not find quiz with ID : quizID
+                        Could not find quiz with ID : {code}
                     </Heading>
                     <Text color={'gray.500'}>Please try another code</Text>
                     <Button
