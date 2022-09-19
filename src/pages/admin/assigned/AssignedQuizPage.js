@@ -27,6 +27,7 @@ const AssignedQuizPage = () => {
     const history = useHistory();
     useEffect(() => {
         getAssignedQuizzes();
+        document.title = "Assigned Quizzes";
     }, []);
 
     const getAssignedQuizzes = async () => {

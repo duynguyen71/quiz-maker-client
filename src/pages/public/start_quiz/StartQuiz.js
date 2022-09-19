@@ -126,22 +126,9 @@ const StartQuiz = () => {
                 return {
                     ...prev,
                     answers: prev.answers.map((item) => {
-                            // item.questionId !== question.questionId ? item : {
-                            //     ...item,
-                            //     options: [
-                            //         ...new Set(item.options.filter(optionId => optionId !== option.optionId))
-                            //     ]
-                            // }
                             if (item.questionId !== question.questionId) {
                                 return item;
                             } else {
-                                // let mOptions = item.options.filter(optionId => optionId !== option.optionId);
-                                // return {
-                                //     ...item,
-                                //     options: [
-                                //         ...new Set(mOptions)
-                                //     ]
-                                // }
                                 return ({
                                     ...item,
                                     options: [
@@ -201,7 +188,7 @@ const StartQuiz = () => {
             {report && <Box bg={''} mx={'5'} mt={'5'} p={5}>
                 <Heading>Submit Report</Heading>
                 <SimpleGrid spacing={5} columns={'4'} py={5}>
-                    <SubmitReportEntry title={'score'} content={`${report.score}/${report.quizScore}`}/>
+                    <SubmitReportEntry title={'score'} content={`${report.score}/${report.quizScore ?? 0}`}/>
                     <SubmitReportEntry title={'questions'}
                                        content={`${report.submitQuestionsCount}/${report.numOfQuestions}`}/>
                     <SubmitReportEntry title={'startTime'} content={`${format(report.startTime, "dd-mm hh:MM")}`}/>
@@ -258,7 +245,7 @@ const StartQuiz = () => {
                                         <Container w={'100%'} maxW="4xl">
                                             <Box maxW="4xl">
                                                 <Text fontWeight={'medium'} fontSize={20} color={'purple.900'}>
-                                                    {i + 1}. {question.title} \t QuestionID : {question.questionId}
+                                                    {i + 1}. {question.title}
                                                 </Text>
                                             </Box>
                                         </Container>
@@ -296,7 +283,7 @@ const StartQuiz = () => {
                                                                     value={option.optionId}
                                                                     colorScheme={'teal'}
                                                                     size={'lg'}>
-                                                                    {option.content} \t OptionID : {option.optionId}
+                                                                    {option.content}
                                                                 </Checkbox>
                                                             </Box>
                                                         </Container>

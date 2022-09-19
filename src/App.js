@@ -9,7 +9,6 @@ import Axios from "axios";
 import {PrivateRoute} from "./routes/privateRoute";
 import Public from "./pages/public/Public";
 import Admin from "./pages/admin/Admin";
-import AdminSettingProvider from "./providers/AdminSettingProvider";
 import VerificationPage from "./pages/public/register/VerificationPage";
 
 function App() {
@@ -17,6 +16,9 @@ function App() {
     const [inputValue, setinputValue] = useState("");
     const [quiz, setQuiz] = useState(null);
 
+    useEffect(()=>{
+       document.title = "Quiz Exam";
+    });
 
     return (
         <Switch>

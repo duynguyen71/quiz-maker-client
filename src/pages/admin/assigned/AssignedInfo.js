@@ -24,6 +24,7 @@ const AssignedInfo = () => {
         useEffect(() => {
             setFullMode(true);
             getInfo();
+            document.tittle = "Assigned Info";
         }, []);
 
         const history = useHistory();

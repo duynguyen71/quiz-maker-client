@@ -49,6 +49,8 @@ const LibraryPage = () => {
     const history = useHistory();
 
     useEffect(() => {
+        document.tittle = "Library";
+
         console.log("rendering............")
         getCreatedQuizzesInfo();
     }, [params, setParams]);

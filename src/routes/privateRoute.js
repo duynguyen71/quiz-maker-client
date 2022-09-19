@@ -14,7 +14,7 @@ export const PrivateRoute = ({children, ...rest}) => {
                 if (user) {
                     return children;
                 } else {
-                    setDirectUrl('/admin');
+                    setDirectUrl('/admin/assigned');
                     return <Redirect to="/login"/>;
                 }
             }}

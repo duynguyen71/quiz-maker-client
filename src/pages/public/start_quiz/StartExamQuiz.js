@@ -19,13 +19,9 @@ import {
     AlertDialogOverlay,
 } from "@chakra-ui/react";
 import {ArrowDownIcon, ArrowUpIcon, TimeIcon} from "@chakra-ui/icons";
-import {useQuiz} from "../../../providers/QuizProvider";
-import axios from "axios";
 import {useHistory, useParams} from "react-router-dom";
-import quizApi from "../../../api/quizApi";
 import CustomAlertDialog from "../../../components/CustomAlertDialog";
 import {useAdmin, useAuth} from "../../../hooks/useAuth";
-import QuizService from "../../../service/QuizService";
 import SubmitReportEntry from "./SubmitReportEntry";
 import format from 'dateformat';
 import UserService from "../../../service/UserService";
@@ -47,20 +43,33 @@ const StartQuiz = () => {
     const [isOpen2, setIsOpen2] = React.useState(false)
     const onClose = () => setIsOpen2(false)
     const cancelRef2 = React.useRef()
+    const [timer, setTimer] = useState('');
+    const countDownTime = async (duration) => {
+        duration = duration * 60;
+        let timer = duration, minutes, seconds;
+        let i = setInterval(function () {
+            minutes = parseInt(timer / 60);
+            seconds = parseInt(timer % 60);
 
+            minutes = minutes <= 0 ? "0" + minutes : minutes;
+            seconds = seconds <= 0 ? "0" + seconds : seconds;
+            setTimer(minutes + ":" + seconds);
+
+            setSubmitContent(prev => ({
+                ...prev,
+                finishTime: new Date()
+            }))
+            if (--timer <= 0) {
+                setOpen(true);
+                clearInterval(i);
+            }
+        }, 1000);
+
+    }
     useEffect(async () => {
             setFullMode(false);
             setLoading(true);
-            try {
-                const resp = await UserService.getSubmissionAnswers(code);
-                console.log(resp.data);
-                const data = resp.data;
-                if (data.isComplete) {
-                    setReport(data);
-                }
-            } catch (e) {
 
-            }
             try {
                 setLoading(true);
                 const resp2 = await UserService.getAssignedQuizDetail(code);
@@ -69,7 +78,7 @@ const StartQuiz = () => {
                     ...prev, quizId: resp2.data.id, startTime: new Date()
 
                 }))
-                console.log(resp2.data);
+                countDownTime(resp2.data.limitTime);
             } catch (e) {
                 console.log(e.response.data);
                 // history.push('/')
@@ -181,7 +190,7 @@ const StartQuiz = () => {
             {report && <Box bg={''} mx={'5'} mt={'5'} p={5}>
                 <Heading>Submit Report</Heading>
                 <SimpleGrid spacing={5} columns={'4'} py={5}>
-                    <SubmitReportEntry title={'score'} content={`${report.score}/${report.quizScore}`}/>
+                    <SubmitReportEntry title={'score'} content={`${report.score}/${report.quizScore ?? 0}`}/>
                     <SubmitReportEntry title={'questions'}
                                        content={`${report.submitQuestionsCount}/${report.numOfQuestions}`}/>
                     <SubmitReportEntry title={'startTime'} content={`${format(report.startTime, "dd-mm hh:MM")}`}/>
@@ -268,7 +277,7 @@ const StartQuiz = () => {
                                                             >
                                                                 <Checkbox
                                                                     // isChecked={report && getQuestionAndOption(question.questionId, option.optionId)}
-                                                                    isDisabled={report !== null}
+                                                                    // isDisabled={report != null}
                                                                     // defaultChecked={
                                                                     //     // ((!isLoading && report && getQuestionAndOption(question.questionId, option.optionId))
                                                                     //     (filterElement && filterElement.options.filter(o => o === option.optionId)[0])
@@ -336,7 +345,7 @@ const StartQuiz = () => {
                             <Button
                                 isDisabled={report !== null}
                                 size={'md'} colorScheme={'teal'} variant={'outline'}
-                                leftIcon={<TimeIcon/>}>{foundedQuiz.limitTime || 'No Time Limit'}{' '}
+                                leftIcon={<TimeIcon/>}>{timer || 'No Time Limit'}{' '}
                                 left</Button>
                         </Flex>}
                     </Box>

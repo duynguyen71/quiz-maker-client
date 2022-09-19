@@ -38,6 +38,8 @@ const Assignment = () => {
         </button>
     ));
     useEffect(() => {
+        document.tittle = "Assigned to Users";
+
         console.log(id);
         getQuizDetail(id);
     }, [])
@@ -53,6 +55,7 @@ const Assignment = () => {
             } finally {
                 setLoading(false);
             }
+            toast(`Assigned to ${assignment.emails} users success`);
         }else{
             toast("Please select finish date!")
         }

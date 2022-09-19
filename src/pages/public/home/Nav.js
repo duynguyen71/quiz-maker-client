@@ -77,7 +77,7 @@ const Nav = () => {
                         fontWeight={"bold"}
                         color={useColorModeValue("gray.800", "white")}
                     >
-                        Logo
+                        Quiz Exam
                     </Text>
 
                     {/*Desktop Nav*/}
@@ -370,6 +370,6 @@ const NAV_ITEMS: Array<NavItem> = [
     },
     {
         label: "Dasboard",
-        href: "/admin",
+        href: "/admin/library",
     },
 ];

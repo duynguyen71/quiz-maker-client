@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext} from "react";
+import React, {ReactNode, useContext, useEffect} from "react";
 import {
     IconButton,
     Avatar,
@@ -56,6 +56,7 @@ export default function SidebarWithHeader({children}) {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const {user} = useAuth();
     const {fullMode} = useAdmin();
+
     return (
         <>
 
@@ -110,7 +111,7 @@ const SidebarContent = ({onClose, ...rest}) => {
                 <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold" cursor={'pointer'} onClick={
                     () => history.replace('/')
                 }>
-                    Logo
+                    Dashboard
                 </Text>
                 <CloseButton
                     display={{base: "flex", md: "none"}}
@@ -199,7 +200,7 @@ const MobileNav = ({onOpen, avt, fullMode, ...rest}) => {
                 fontFamily="monospace"
                 fontWeight="bold"
             >
-                Logo
+                Quiz Exam
             </Text>
 
             <HStack spacing={{base: "0", md: "6"}}>

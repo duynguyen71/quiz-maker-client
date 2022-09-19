@@ -28,6 +28,8 @@ const ReportDetailPage = () => {
     const [data, setData] = useState();
 
     useEffect(async () => {
+        document.tittle = "Report Quizzes";
+
         try {
             console.log('fetch data')
             const url = `http://localhost:8080/api/v1/admin/quiz-assignment/assign-quizzes/${id}/report`;
